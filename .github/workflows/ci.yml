@@ -39,6 +39,7 @@ jobs:
             --shadow-database-url "$SHADOW_DB" --exit-code
         env:
           SHADOW_DB: postgresql://finova:finova@localhost:5432/shadow
+          DATABASE_URL: postgresql://finova:finova@localhost:5432/shadow
       - uses: actions/upload-artifact@v4
         if: always()
         with:
