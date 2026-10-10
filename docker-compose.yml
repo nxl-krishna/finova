@@ -1,3 +1,5 @@
+# Local full stack:  docker compose up --build   ->  http://localhost:3000
+# Database only:     docker compose up -d db
 services:
   db:
     image: postgres:16-alpine
@@ -9,5 +11,31 @@ services:
       - "5434:5432"
     volumes:
       - finova-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finova"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build: { context: ., target: migrator }
+    environment:
+      DATABASE_URL: postgresql://finova:finova@db:5432/finova
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  app:
+    build: { context: ., target: runner }
+    environment:
+      DATABASE_URL: postgresql://finova:finova@db:5432/finova
+      AUTH_SECRET: ${AUTH_SECRET:-local-compose-secret-change-me}
+      AI_API_KEY: ${AI_API_KEY:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
 volumes:
   finova-data:

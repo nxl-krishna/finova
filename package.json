@@ -2,12 +2,19 @@
   "name": "finova",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node node_modules/next/dist/bin/next dev",
     "build": "node node_modules/prisma/build/index.js generate && node node_modules/next/dist/bin/next build",
     "start": "node node_modules/next/dist/bin/next start",
     "db:up": "docker compose up -d",
     "db:push": "node node_modules/prisma/build/index.js db push",
+    "db:migrate": "node node_modules/prisma/build/index.js migrate deploy",
+    "db:migrate:new": "node node_modules/prisma/build/index.js migrate dev",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "postinstall": "node node_modules/prisma/build/index.js generate",
     "db:seed": "node node_modules/tsx/dist/cli.mjs prisma/seed.ts",
     "test": "node node_modules/vitest/vitest.mjs run",
     "test:e2e": "node node_modules/@playwright/test/cli.js test"
