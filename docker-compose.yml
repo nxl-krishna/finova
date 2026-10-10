@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: finova
+      POSTGRES_PASSWORD: finova
+      POSTGRES_DB: finova
+    ports:
+      - "5434:5432"
+    volumes:
+      - finova-data:/var/lib/postgresql/data
+volumes:
+  finova-data:
